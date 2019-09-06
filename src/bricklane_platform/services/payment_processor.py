@@ -10,7 +10,7 @@ class PaymentProcessor(object):
         with open(csv_path) as f:
             reader = csv.DictReader(f)
             for row in reader:
-                payments.append(Payment(row))
+                payments.append(Payment(row, source))
 
         return payments
 

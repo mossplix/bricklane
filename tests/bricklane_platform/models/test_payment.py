@@ -19,21 +19,21 @@ class TestPayment(unittest.TestCase):
 
     def test_init_with_data(self):
 
-        payment_data = [{
+        payment_data = [({
             "amount": "2000",
             "card_id": "45",
             "card_status": "processed",
             "customer_id": "123",
             "date": "2019-02-01",
-        }, {
+        }, "card"), ({
             "amount": "2000",
             "bank_account_id": "45",
             "customer_id": "123",
             "date": "2019-02-01"
-        }]
-        for data in payment_data:
+        }, "bank")]
+        for (data, source) in payment_data:
 
-            payment = Payment(data)
+            payment = Payment(data, source)
 
             self.assertEqual(payment.customer_id, 123)
             self.assertEqual(payment.date, datetime(2019, 2, 1))
@@ -48,7 +48,7 @@ class TestPayment(unittest.TestCase):
             if payment.bank:
                 bank = payment.bank
                 self.assertIsInstance(bank, Bank)
-                self.assertEqual(bank.bank_account_id, 45)
+                self.assertEqual(bank.bank_account_id, "45")
                 self.assertEqual(card.status, "processed")
 
     def test_is_successful(self):

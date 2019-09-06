@@ -3,6 +3,7 @@ from dateutil.parser import parse
 
 
 from bricklane_platform.models.card import Card
+from bricklane_platform.models.bank import Bank
 from bricklane_platform.config import PAYMENT_FEE_RATE
 
 
@@ -13,8 +14,10 @@ class Payment(object):
     amount = None
     fee = None
     card_id = None
+    card = None
+    bank = None
 
-    def __init__(self, data=None):
+    def __init__(self, data=None, source="card"):
 
         if not data:
             return
@@ -26,10 +29,17 @@ class Payment(object):
         self.fee = total_amount * PAYMENT_FEE_RATE
         self.amount = total_amount - self.fee
 
-        card = Card()
-        card.card_id = int(data["card_id"])
-        card.status = data["card_status"]
-        self.card = card
+        if(source == "card"):
+            card = Card()
+            card.card_id = int(data["card_id"])
+            card.status = data["card_status"]
+            self.card = card
+        elif(source == "bank"):
+            bank = Bank()
+            bank.bank_account_id = data["bank_account_id"]
+            bank.status = "processed"
+            self.bank = bank
 
     def is_successful(self):
-        return self.card.status == "processed"
+        payment_type = self.card or self.bank
+        return payment_type.status == "processed"
