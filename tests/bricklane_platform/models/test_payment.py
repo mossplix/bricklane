@@ -3,6 +3,7 @@ from datetime import datetime
 
 from bricklane_platform.models.payment import Payment
 from bricklane_platform.models.card import Card
+from bricklane_platform.models.bank import Bank
 
 
 class TestPayment(unittest.TestCase):
